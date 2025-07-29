@@ -4,44 +4,41 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using SmartStock.Data;  // <-- Make sure this matches your DbContext & Item namespace
+using SmartStock.Data;
 
 
 namespace SmartStock
 {
     public partial class Dashboard : Window
     {
-        // Backing collection
+
         private ObservableCollection<Item> Items { get; set; }
 
-        // Allows filtering/search
+      
         private ICollectionView itemsView;
 
-        // Next ID (for in‑memory demo; replace with DB logic later)
+    
         private int nextId = 1;
 
-        // Track item being edited
+    
         private Item selectedItemForEdit = null;
 
         public Dashboard()
         {
             InitializeComponent();
 
-            // If you have a database, replace this block with:
-            // using(var db = new SmartStockDbContext(...)) { Load from db.Items.ToList(); }
-
-            // Sample startup items
+           
             Items = new ObservableCollection<Item>
             {
                
             };
 
-            // Set up filtering view
+          
             itemsView = CollectionViewSource.GetDefaultView(Items);
             ItemsDataGrid.ItemsSource = itemsView;
         }
 
-        // Search bar filter
+
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             string filter = SearchTextBox.Text.Trim().ToLower();
@@ -50,7 +47,7 @@ namespace SmartStock
                 : (obj => ((Item)obj).Name.ToLower().Contains(filter));
         }
 
-        // Add or update logic
+   
         private void AddOrUpdateItem_Click(object sender, RoutedEventArgs e)
         {
             string name = NameInput.Text.Trim();
@@ -62,12 +59,12 @@ namespace SmartStock
 
             if (selectedItemForEdit == null)
             {
-                // Add new
+
                 Items.Add(new Item {Name = name, Quantity = qty });
             }
             else
             {
-                // Update existing
+     
                 selectedItemForEdit.Name = name;
                 selectedItemForEdit.Quantity = qty;
                 itemsView.Refresh();
@@ -77,7 +74,7 @@ namespace SmartStock
             ClearSelection();
         }
 
-        // Delete logic
+    
         private void DeleteItem_Click(object sender, RoutedEventArgs e)
         {
             if (ItemsDataGrid.SelectedItem is Item sel)
@@ -91,7 +88,7 @@ namespace SmartStock
             }
         }
 
-        // Clear inputs & selection
+
         private void ClearSelection_Click(object sender, RoutedEventArgs e)
             => ClearSelection();
 
@@ -101,10 +98,10 @@ namespace SmartStock
             NameInput.Text = "";
             QuantityInput.Text = "";
             selectedItemForEdit = null;
-            // Reset button text if you changed it for edit mode
+          
         }
 
-        // When user selects a row, populate inputs for edit
+
         private void ItemsDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (ItemsDataGrid.SelectedItem is Item item)
